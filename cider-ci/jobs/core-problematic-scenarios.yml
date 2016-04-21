@@ -13,16 +13,10 @@ jobs:
     - type: job
       job: scenarios
       states: [passed]
-    - type: job
-      job: leihs-admin-scenarios
-      states: [passed]
-    - type: job
-      job: procurement-scenarios
-      states: [passed]
 
     run-on:
     - type: branch
-      include-match: ^.+$
+      include-match: '[a-z]*/procurement_.*$'
 
     context:
       task-defaults:

@@ -11,7 +11,7 @@ jobs:
 
     run-on:
     - type: branch
-      include-match: ^.*$
+      include-match: '[a-z]*/procurement_.*$'
 
     context:
       task-defaults:

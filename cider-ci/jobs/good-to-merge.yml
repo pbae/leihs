@@ -13,7 +13,7 @@ jobs:
       job: scenarios
       states: [passed]
     - type: job
-      job: leihs-admin-scenarios
+      job: admin-scenarios
       states: [passed]
     - type: job
       job: procurement-scenarios
@@ -22,7 +22,7 @@ jobs:
       job: code-checks
       states: [passed]
     - type: job
-      job: leihs-admin-code-checks
+      job: admin-code-checks
       states: [passed]
     - type: job
       job: procurement-code-checks
