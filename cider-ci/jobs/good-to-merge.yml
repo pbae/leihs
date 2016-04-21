@@ -10,27 +10,13 @@ jobs:
       Status of this job is **used by github's "branch protection"**!
 
     depends-on:
-    - type: job
-      job: scenarios
-      states: [passed]
-    - type: job
-      job: admin-scenarios
-      states: [passed]
-    - type: job
-      job: procurement-scenarios
-      states: [passed]
-    - type: job
-      job: code-checks
-      states: [passed]
-    - type: job
-      job: admin-code-checks
-      states: [passed]
-    - type: job
-      job: procurement-code-checks
-      states: [passed]
-    - type: job
-      job: meta
-      states: [passed]
+    - {job: meta, type: job}
+    - {job: admin-code-checks, type: job}
+    - {job: admin-scenarios, type: job}
+    - {job: core-code-checks, type: job}
+    - {job: core-scenarios, type: job}
+    - {job: procurement-code-checks, type: job}
+    - {job: procurement-scenarios, type: job}
 
     run-on:
     - type: branch
