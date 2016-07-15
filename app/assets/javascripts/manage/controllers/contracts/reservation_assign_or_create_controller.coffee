@@ -24,8 +24,9 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
       optionsPerPage: 100
 
     onChangeCallback = (value) ->
+      that.autocompleteController.setProps(isLoading: true)
       reservationsAddController.search value, (data)->
-        that.autocompleteController.renderWith(data)
+        that.autocompleteController.setProps(searchResults: data, isLoading: false)
 
     # create and mount the input field:
     props =
