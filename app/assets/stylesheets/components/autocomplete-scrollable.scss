@@ -30,14 +30,13 @@
   .submenu-header {
     font-size: 1.2em;
     padding: 8px;
-      background-color: #f2f2f2;          // fallback color
+    background-color: #f2f2f2;             // fallback color
     background-color: rgba(0, 0, 0, 0.08); // transparent so shadow below is visible
     border-bottom: 2px solid #d7d7d5;
     border-top: 2px solid #d7d7d5;
-
-    &:first {
-      border-top: none;
-    }
+  }
+  & ul:first-child .submenu-header {
+    border-top: none;
   }
 
   // indicate cut-off content with shadows

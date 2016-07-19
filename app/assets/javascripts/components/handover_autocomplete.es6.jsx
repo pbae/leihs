@@ -90,7 +90,7 @@
       }
 
       return (
-        <div {...menuProps}>
+        <ul {...menuProps}>
 
           {_.isEmpty(models) ? null
             : this._renderMenuSubSection(_jed('Models'), models)}
@@ -101,14 +101,14 @@
           {_.isEmpty(templates) ? null
             : this._renderMenuSubSection(_jed('Templates'), templates)}
 
-        </div>
+        </ul>
       )
     },
 
     _renderMenuSubSection (heading, list) {
       return [
-        <li key='header' className='submenu-header'><b>{heading}</b></li>,
-        <ul key='submenu' className='submenu-scroll'>{list}</ul>
+        (<li className='submenu-header'><b>{heading}</b></li>),
+        (<li className='submenu-scroll'><ul>{list}</ul></li>)
       ]
     },
 
@@ -140,10 +140,10 @@
       const props = this.props
 
       // TODO: barcode-scanner-target??? (if needed, put in inputProps)
-      // TODO: id='assign-or-add-input'???
 
       var inputProps = {
         type: 'text',
+        // TODO: id: 'assign-or-add-input'???
         className: 'row',
         placeholder: props.placeholder
       }
