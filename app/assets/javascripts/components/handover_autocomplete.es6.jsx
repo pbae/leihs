@@ -66,8 +66,10 @@
         }
       }
 
-      if (this.state.isLoading) {
-        return <div>Loading…</div>
+      if (this.props.isLoading) {
+        return (<div {...menuProps}>
+          <div className='loading-bg-small margin-top-m margin-bottom-m'/>
+        </div>)
       }
 
       const models = _.sortBy(
@@ -85,13 +87,13 @@
       return (
         <div {...menuProps}>
 
-          {(models.length === 0) ? null
+          {_.isEmpty(models) ? null
             : this._renderMenuSubSection(_jed('Models'), models)}
 
-          {(options.length === 0) ? null
+          {_.isEmpty(options) ? null
             : this._renderMenuSubSection(_jed('Options'), options)}
 
-          {(templates.length === 0) ? null
+          {_.isEmpty(templates) ? null
             : this._renderMenuSubSection(_jed('Templates'), templates)}
 
         </div>
