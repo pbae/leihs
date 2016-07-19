@@ -18,6 +18,7 @@ var Autocomplete = React.createClass({
     getItemValue: React.PropTypes.func.isRequired,
     renderItem: React.PropTypes.func.isRequired,
     renderMenu: React.PropTypes.func,
+    selectOnInputClick: React.PropTypes.bool,
     menuStyle: React.PropTypes.object,
     inputProps: React.PropTypes.object,
     wrapperProps: React.PropTypes.object,
@@ -29,7 +30,8 @@ var Autocomplete = React.createClass({
       value: '',
       wrapperProps: {},
       wrapperStyle: {
-        display: 'inline-block'
+        display: 'inline-block',
+        position: 'relative'
       },
       inputProps: {},
       onChange: function onChange() {},
@@ -37,6 +39,7 @@ var Autocomplete = React.createClass({
       renderMenu: function renderMenu(items, value, style) {
         return React.createElement('div', { style: _extends({}, style, this.menuStyle), children: items });
       },
+      selectOnInputClick: true,
       shouldItemRender: function shouldItemRender() {
         return true;
       },
@@ -46,13 +49,13 @@ var Autocomplete = React.createClass({
         background: 'rgba(255, 255, 255, 0.9)',
         padding: '2px 0',
         fontSize: '90%',
-        position: 'fixed',
+        position: 'absolute',
         overflow: 'auto',
-        maxHeight: '50%' }
+        maxHeight: '50vh'
+      }
     };
   },
 
-  // TODO: don't cheat, let it flow to the bottom
   getInitialState: function getInitialState() {
     return {
       isOpen: false,
@@ -241,12 +244,9 @@ var Autocomplete = React.createClass({
     var node = this.refs.input;
     var rect = node.getBoundingClientRect();
     var computedStyle = global.window.getComputedStyle(node);
-    var marginBottom = parseInt(computedStyle.marginBottom, 10) || 0;
     var marginLeft = parseInt(computedStyle.marginLeft, 10) || 0;
     var marginRight = parseInt(computedStyle.marginRight, 10) || 0;
     this.setState({
-      menuTop: rect.bottom + marginBottom,
-      menuLeft: rect.left + marginLeft,
       menuWidth: rect.width + marginLeft + marginRight
     });
   },
@@ -292,8 +292,6 @@ var Autocomplete = React.createClass({
       });
     });
     var style = {
-      left: this.state.menuLeft,
-      top: this.state.menuTop,
       minWidth: this.state.menuWidth
     };
     var menu = this.props.renderMenu(items, this.props.value, style);
@@ -310,16 +308,24 @@ var Autocomplete = React.createClass({
 
   handleInputFocus: function handleInputFocus() {
     if (this._ignoreBlur) return;
+    // We don't want `selectItemFromMouse` to trigger when
+    // the user clicks into the input to focus it, so set this
+    // flag to cancel out the logic in `handleInputClick`.
+    // The event order is:  MouseDown -> Focus -> MouseUp -> Click
+    this._ignoreClick = true;
     this.setState({ isOpen: true });
   },
 
   isInputFocused: function isInputFocused() {
-    var el = React.findDOMNode(this.refs.input);
+    var el = this.refs.input;
     return el.ownerDocument && el === el.ownerDocument.activeElement;
   },
 
   handleInputClick: function handleInputClick() {
-    if (this.isInputFocused() && this.state.isOpen === false) this.setState({ isOpen: true });else if (this.state.highlightedIndex !== null) this.selectItemFromMouse(this.getFilteredItems()[this.state.highlightedIndex]);
+    var shouldSelectHighlighted = this.props.selectOnInputClick && this.state.highlightedIndex !== null && !this._ignoreClick;
+    // Input will not be focused if it's disabled
+    if (this.isInputFocused() && this.state.isOpen === false) this.setState({ isOpen: true });else if (shouldSelectHighlighted) this.selectItemFromMouse(this.getFilteredItems()[this.state.highlightedIndex]);
+    this._ignoreClick = false;
   },
 
   render: function render() {

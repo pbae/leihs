@@ -1,14 +1,14 @@
 {
   "name": "react-autocomplete",
-  "version": "1.0.0-rc5",
+  "version": "1.0.1",
   "description": "Accessible, extensible, Autocomplete for React.js",
   "main": "./build/lib/index.js",
   "repository": {
     "type": "git",
-    "url": "https://github.com/rackt/react-autocomplete.git"
+    "url": "https://github.com/reactjs/react-autocomplete.git"
   },
-  "homepage": "https://github.com/rackt/react-autocomplete",
-  "bugs": "https://github.com/rackt/react-autocomplete/issues",
+  "homepage": "https://github.com/reactjs/react-autocomplete",
+  "bugs": "https://github.com/reactjs/react-autocomplete/issues",
   "directories": {
     "example": "examples"
   },
