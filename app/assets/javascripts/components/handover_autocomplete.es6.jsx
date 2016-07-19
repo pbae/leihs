@@ -23,10 +23,6 @@
       )
     },
 
-    getDefaultProps () {
-      return { searchResults: [] }
-    },
-
     getInitialState () {
       return { value: '' }
     },
@@ -52,7 +48,7 @@
     },
 
     // "partials"
-    _renderMenu (items, value, givenStyles) {
+    _renderMenu (items, value, givenStyles, props = this.props) {
       // show nothing when no search:
       if (value === '') {
         return <div style={{display: 'none'}}/>
@@ -66,7 +62,7 @@
         }
       }
 
-      if (this.props.isLoading) {
+      if (props.isLoading) {
         return (<div {...menuProps}>
           <div className='loading-bg-small margin-top-m margin-bottom-m'/>
         </div>)
@@ -83,6 +79,15 @@
       const templates = _.sortBy(
         _.filter(items, (i) => i.props.item.type === _jed('Template')),
         (i) => i.props.item.name)
+
+      // searched but no results:
+      if (props.searchResults && _.all([models, options, templates], _.isEmpty)) {
+        return (<ul {...menuProps}>
+          <li className='padding-left-s margin-top-m margin-bottom-m'>
+            {_jed('No Results!')}
+          </li>
+        </ul>)
+      }
 
       return (
         <div {...menuProps}>
@@ -153,7 +158,7 @@
           <Autocomplete
             ref='autocomplete'
             value={this.state.value}
-            items={props.searchResults}
+            items={props.searchResults || []}
             wrapperProps={wrapperProps}
             inputProps={inputProps}
             renderMenu={this._renderMenu}
