@@ -85,7 +85,7 @@
       if (props.searchResults && _.all([models, options, templates], _.isEmpty)) {
         return (<ul {...menuProps}>
           <li className='padding-left-s margin-top-m margin-bottom-m'>
-            {_jed('No Results!')}
+            {_jed('No results')}
           </li>
         </ul>)
       }
