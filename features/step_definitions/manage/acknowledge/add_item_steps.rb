@@ -1,6 +1,6 @@
 When /^I add a model by typing in the inventory code of an item of that model to the quick add$/ do
   @item ||= @current_inventory_pool.items.detect {|x| not x.inventory_code.blank? }
-  find('#add-input').set @item.inventory_code
+  find('#add-input input').set @item.inventory_code
   find("button[type='submit'][title='#{_("Add")}']").click
   find('.line', match: :prefer_exact, text: @item.model.name)
 end
