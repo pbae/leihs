@@ -1,12 +1,8 @@
 class window.App.ReservationsAddController extends Spine.Controller
 
-  # TODO: check all usage of @input, should talk to react component
-  # DONE: rewrite search, should use the value given as argument (not from DOM input!)
-
   elements:
     "#add-start-date": "addStartDate"
     "#add-end-date": "addEndDate"
-    # "[data-add-contract-line]": "input"
 
   events:
     "click [type='submit']": "showExplorativeSearch"
@@ -123,14 +119,16 @@ class window.App.ReservationsAddController extends Spine.Controller
       @availabilities = []
       do callback
 
+  getInputValue: => @autocompleteController.getInstance().state.value
+
   submit: (e)=>
     e.preventDefault() if e?
     return false if @preventSubmit
-    inventoryCode = @input.val()
+    inventoryCode = @getInputValue()
     if inventoryCode.length
       console.log inventoryCode
       App.Inventory.findByInventoryCode(inventoryCode).done @addInventoryItem, inventoryCode
-    @input.val("").change()
+    @autocompleteController.getInstance().resetInput()
 
   addInventoryItem: (data, inventoryCode)=>
     console.log inventoryCode
@@ -214,7 +212,7 @@ class window.App.ReservationsAddController extends Spine.Controller
         message: _jed("Added %s", template.name)
 
   showExplorativeSearch: =>
-    if @input.val().length == 0
+    if @getInputValue.length == 0
       new App.ReservationsExplorativeAddController
         contract: @contract
         startDate: @getStartDate()
