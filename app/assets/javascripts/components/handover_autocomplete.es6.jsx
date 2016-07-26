@@ -43,8 +43,9 @@
     },
 
     // public methods
-    val () { // setter and getter!
-      return 'TODO return val'
+    resetInput () {
+      // reset the input field
+      this.setState({ value: '' })
     },
 
     // "partials"

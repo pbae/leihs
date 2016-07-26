@@ -22,6 +22,7 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
       optionsPerPage: 100
 
     onChangeCallback = (value) ->
+      that.inputValue = value
       that.autocompleteController.setProps(isLoading: true)
       reservationsAddController.search value, (data)->
         that.autocompleteController.setProps(searchResults: data, isLoading: false)
@@ -51,7 +52,7 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
   submit: (e)=>
     e.preventDefault()
     e.stopImmediatePropagation()
-    inventoryCode = @input.val() # TODO
+    inventoryCode = @inputValue
     return false unless inventoryCode.length
     App.Reservation.assignOrCreate
       start_date: @getStartDate().format("YYYY-MM-DD")
@@ -63,7 +64,7 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
       App.Flash
         type: "error"
         message: e.responseText
-    @input.val("") # TODO
+    @autocompleteController.getInstance().resetInput()
 
   assignedOrCreated: (inventoryCode, data)=>
     done = =>
