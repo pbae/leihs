@@ -12,8 +12,6 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
 
     that = @
 
-    new App.SwapModelController {el: @el}
-
     reservationsAddController = new App.ReservationsAddController
       el: @el
       user: @user
