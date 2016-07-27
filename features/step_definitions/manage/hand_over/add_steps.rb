@@ -13,8 +13,8 @@ When /^I add (a|an|a borrowable|an unborrowable) (item|license) to the hand over
   @inventory_codes << @inventory_code
   line_amount_before = all('.line', minimum: 1).size
   step 'I close the flash message'
-  find('[data-add-contract-line]').set @inventory_code
-  find('[data-add-contract-line] + .addon').click
+  find('#assign-or-add-input input').set @inventory_code
+  find('#assign-or-add-input button').click
   find('#flash')
   find(".line input[value='#{@inventory_code}']")
   expect(line_amount_before).to be < all('.line', minimum: 1).size
@@ -33,8 +33,8 @@ When /^I add (a|an|a borrowable|an unborrowable) (item|license) to the hand over
            end.order('RAND()').first
   @model = @item.model
   @inventory_codes << @item.inventory_code
-  fill_in 'assign-or-add-input', with: @item.model.name
-  find('.ui-menu-item', text: @item.model.name).click
+  find('#assign-or-add-input input').set @item.model.name
+  find('.ui-autocomplete .row', text: @item.model.name).click
   find('.line', text: @item.model.name, match: :first).find('form[data-assign-item-form] input').click
   find('.ui-menu-item', text: @item.inventory_code).click
 end
