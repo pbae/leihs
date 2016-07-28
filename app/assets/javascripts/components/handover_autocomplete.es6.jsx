@@ -48,6 +48,11 @@
       this.setState({ value: '' })
     },
 
+    // mirror jQueryAutocomplete API
+    val (str) {
+      this.setState({value: str})
+    },
+
     // "partials"
     _renderMenu (items, value, givenStyles, props = this.props) {
       // show nothing when no search:
@@ -139,8 +144,6 @@
 
     render () {
       const props = this.props
-
-      // TODO: barcode-scanner-target??? (if needed, put in inputProps)
 
       var inputProps = {
         type: 'text',

@@ -3,7 +3,7 @@
 
 class window.App.HandOverAutocompleteController
 
-  constructor: (@props, @container) ->
+  constructor: (@props, @container, @opts) ->
 
   _render: ->
     @instance = \
@@ -11,6 +11,8 @@ class window.App.HandOverAutocompleteController
         React.createElement(HandoverAutocomplete, @props),
         @container
       )
+    if @opts.isBarcodeScannerTarget
+      window.reactBarcodeScannerTarget = @instance
 
   # like 'setState' inside React, but for integration with other controllers etc
   setProps: (newProps) ->

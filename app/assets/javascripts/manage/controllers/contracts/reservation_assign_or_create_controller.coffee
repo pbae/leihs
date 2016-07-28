@@ -22,7 +22,6 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
       optionsPerPage: 100
 
     onChangeCallback = (value) ->
-      that.inputValue = value
       that.autocompleteController.setProps(isLoading: true)
       reservationsAddController.search value, (data)->
         that.autocompleteController.setProps(searchResults: data, isLoading: false)
@@ -37,7 +36,8 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
     @autocompleteController =
       new App.HandOverAutocompleteController \
         props,
-        @el.find("#assign-or-add-input")[0]
+        @el.find("#assign-or-add-input")[0],
+        {isBarcodeScannerTarget: true}
 
     @autocompleteController._render()
 
@@ -52,7 +52,7 @@ class window.App.ReservationAssignOrCreateController extends Spine.Controller
   submit: (e)=>
     e.preventDefault()
     e.stopImmediatePropagation()
-    inventoryCode = @inputValue
+    inventoryCode = @autocompleteController.getInstance().state.value
     return false unless inventoryCode.length
     App.Reservation.assignOrCreate
       start_date: @getStartDate().format("YYYY-MM-DD")
