@@ -198,7 +198,7 @@ Given(/^(\d+) (unsubmitted|submitted|approved) contract reservations?(?: for use
   attrs[:user] = User.find_by_email(user_email) if user_email
 
   n.to_i.times do
-    attrs[:inventory_pool] = attrs[:user].inventory_pools.order('RAND()').first if attrs[:user]
+    attrs[:inventory_pool] = attrs[:user].inventory_pools.order('RANDOM()').first if attrs[:user]
     FactoryGirl.create :reservation, attrs
   end
 end
@@ -728,11 +728,14 @@ Given(/^each model has at least (\d+) (submitted|approved) reservations$/) do |a
   Model.pluck(:id).each do |model_id|
     values = n.times.map do
       # NOTE: too slow!
+      # NOTE: who cares! let's make this simple again
+      # TODO: fix this for PG
       # FactoryGirl.create :reservation, attrs
+
 
       "(#{model_id}, 1, DATE_ADD(CURDATE(), INTERVAL 100 * rand() DAY), DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 200 DAY), INTERVAL 300 * rand() DAY), " \
       "NOW(), NOW(), 'ItemLine', " \
-      "(SELECT id FROM purposes ORDER BY RAND() LIMIT 1), (SELECT id FROM inventory_pools ORDER BY RAND() LIMIT 1), (SELECT id FROM users ORDER BY RAND() LIMIT 1), '#{status}')"
+      "(SELECT id FROM purposes ORDER BY RANDOM() LIMIT 1), (SELECT id FROM inventory_pools ORDER BY RANDOM() LIMIT 1), (SELECT id FROM users ORDER BY RANDOM() LIMIT 1), '#{status}')"
     end
 
     Reservation.connection
