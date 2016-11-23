@@ -35,40 +35,22 @@ Given(/^no dump is existing$/) do
 end
 
 Given(/^the minimal setup exists$/) do
-  `RAILS_ENV=test rake db:drop db:create db:migrate`
-
+  PgTasks.truncate_tables
   FactoryGirl.create :setting
   LeihsFactory.create_default_languages
   LeihsFactory.create_default_authentication_systems
 end
 
-Then(/^the (minimal|normal|huge) dump is generated$/) do |arg1|
-  config = Rails.configuration.database_configuration[Rails.env]
-  file_name = Dataset.dump_file_name(arg1)
-
-  # TODO: faster alternative: Percona XtraBackup innobackupex
-  system "echo 'set autocommit=0; set unique_checks=0; set foreign_key_checks=0;' > #{file_name}"
-  system "mysqldump #{config['host'] ? "-h #{config['host']}" : nil} " \
-         "-u #{config['username']} #{config['password'] ? "--password=#{config['password']}" : nil} " \
-         " #{config['database']} --no-create-db | grep -v 'SQL SECURITY DEFINER' >> #{file_name}"
-  system "echo 'commit; set unique_checks=1; set foreign_key_checks=1;' >> #{file_name}"
-
+Then(/^the (minimal|normal|huge) dump is generated$/) do |dataset|
+  file_name = Dataset.dump_file_name(dataset)
+  binding.pry
+  PgTasks.data_dump file_name
   expect(File.exists?(file_name)).to be true
 end
 
-Given(/^the (minimal|normal|huge) dump is loaded$/) do |arg1|
-  `RAILS_ENV=test rake db:drop db:create`
-
-  config = Rails.configuration.database_configuration[Rails.env]
-  file_name = Dataset.dump_file_name(arg1)
-
-  expect(File.exists?(file_name)).to be true
-
-  cmd = "mysql #{config['host'] ? "-h #{config['host']}" : nil} -u #{config['username']} #{config['password'] ? "--password=#{config['password']}" : nil} #{config['database']} < #{file_name}"
-
-  # we need this variable assignment in order to wait for the end of the system call. DO NOT DELETE !
-  dump_restored = system(cmd)
-  raise 'persona dump not loaded' unless dump_restored
+Given(/^the (minimal|normal|huge) dump is loaded$/) do |dataset|
+  PgTasks.truncate_tables
+  PgTasks.data_restore Dataset.dump_file_name(dataset)
 end
 
 Given /^the (ZHdK )?item fields are initialized$/ do |zhdk|
