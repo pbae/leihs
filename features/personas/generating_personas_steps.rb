@@ -304,6 +304,7 @@ Given(/^the following categories exist:$/) do |table|
     group ||= FactoryGirl.create(:category, name: hash_row['name'])
     if hash_row['parent name']
       parent = Category.find_by_name hash_row['parent name']
+      binding.pry
       parent.children << group
     end
   end
