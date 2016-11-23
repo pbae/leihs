@@ -43,7 +43,6 @@ end
 
 Then(/^the (minimal|normal|huge) dump is generated$/) do |dataset|
   file_name = Dataset.dump_file_name(dataset)
-  binding.pry
   PgTasks.data_dump file_name
   expect(File.exists?(file_name)).to be true
 end
@@ -304,7 +303,6 @@ Given(/^the following categories exist:$/) do |table|
     group ||= FactoryGirl.create(:category, name: hash_row['name'])
     if hash_row['parent name']
       parent = Category.find_by_name hash_row['parent name']
-      binding.pry
       parent.children << group
     end
   end
