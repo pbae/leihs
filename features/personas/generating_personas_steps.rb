@@ -195,10 +195,11 @@ end
 
 Given(/^(\d+) (unsubmitted|submitted|approved) contract reservations?(?: for user "(.*)")? exists?$/) do |n, status, user_email|
   attrs = {status: status.to_sym}
-  attrs[:user] = User.find_by_email(user_email) if user_email
-
+  user = user_email.present? ? User.find_by_email(user_email) : nil
+  attrs[:user] = user
+  user_inventory_pools = user ? InventoryPool.where(user: user).all : []
   n.to_i.times do
-    attrs[:inventory_pool] = attrs[:user].inventory_pools.order('RANDOM()').first if attrs[:user]
+    attrs[:inventory_pool] = user_inventory_pools.sample if attrs[:user]
     FactoryGirl.create :reservation, attrs
   end
 end
