@@ -722,27 +722,24 @@ Given(/^each model has at least (\d+) items$/) do |arg1|
   end
 end
 
-Given(/^each model has at least (\d+) (submitted|approved) reservations$/) do |arg1, status|
-  n = arg1.to_i
+Given(/^each model has at least (\d+) (submitted|approved) reservations$/) do |n, status|
   status = status.to_sym
+  purposes = Purposes.all
+  inventory_pools = InventoryPool.all
+  users = User.all
   Model.pluck(:id).each do |model_id|
-    values = n.times.map do
-      # NOTE: too slow!
-      # NOTE: who cares! let's make this simple again
-      # TODO: fix this for PG
-      # FactoryGirl.create :reservation, attrs
-
-
-      "(#{model_id}, 1, DATE_ADD(CURDATE(), INTERVAL 100 * rand() DAY), DATE_ADD(DATE_ADD(CURDATE(), INTERVAL 200 DAY), INTERVAL 300 * rand() DAY), " \
-      "NOW(), NOW(), 'ItemLine', " \
-      "(SELECT id FROM purposes ORDER BY RANDOM() LIMIT 1), (SELECT id FROM inventory_pools ORDER BY RANDOM() LIMIT 1), (SELECT id FROM users ORDER BY RANDOM() LIMIT 1), '#{status}')"
+    Integer(n).times.each do
+      FactoryGirl.create :reservation,
+        model_id: model_id,
+        quantity: 1,
+        start_date: Time.zone.now + rand(99).days,
+        end_date: Time.zone.now + 100.days + rand(100).days,
+        type: 'ItemLine',
+        purpose: purposes.sample,
+        inventory_pool: inventory_pool.sample,
+        user: users.sample,
+        status: status
     end
-
-    Reservation.connection
-        .execute('INSERT INTO reservations ' \
-             '(model_id, quantity, start_date, end_date, created_at, updated_at, type, purpose_id, inventory_pool_id, user_id, status) ' \
-             "VALUES #{values.join(', ')};")
-
-    expect(Reservation.where(model_id: model_id).send(status).count).to be >= n
   end
+  expect(Reservation.where(model_id: model_id).send(status).count).to be >= Integer(n)
 end
