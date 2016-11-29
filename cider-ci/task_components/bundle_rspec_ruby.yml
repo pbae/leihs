@@ -2,7 +2,7 @@ traits:
   ruby-install: true
   chruby: true
   Bash: true
-  # ci-g2016-01: true
+  ci-executor-04: true
 
 scripts:
 
