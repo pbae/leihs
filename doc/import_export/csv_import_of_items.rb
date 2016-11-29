@@ -20,10 +20,10 @@ def validate_item(item)
   errors = false
 
   begin
-    Model.find item['Leihs-Modellnummer']
+    Model.exists?(item['Modell-ID'].to_i)
   rescue
     errors = true
-    log_error "Model '#{item["Leihs-Modellname"]}' not found.", item
+    log_error "Model '#{item['Modell-ID']}' not found.", item
   end
 
   if item['Verantwortliche Abteilung'].blank?
@@ -60,17 +60,13 @@ end
 items_to_import.each do |item|
   next if not validate_item(item)
   i = Item.new
-  i.model = Model.find item['Leihs-Modellnummer']
-  i.inventory_code = item['Inv-Code:']
+  i.model = Model.find item['Produkt']
+  #i.inventory_code = item['Inventarcode']
   i.serial_number = item['Seriennummer']
-  #i.note = item["Note"]
+  #i.note = item["Notiz"]
 
-  # Inventory relevance
-  i.is_inventory_relevant = false
-  i.is_inventory_relevant = true if item['Inventarrelevant:'] == 'ja'
-
-  # Borrowability
-  i.is_borrowable = false
+  i.is_inventory_relevant = true
+  i.is_borrowable = true
 
   # Ownership
   owner_ip = InventoryPool.where(name: item['Besitzer']).first
@@ -83,7 +79,6 @@ items_to_import.each do |item|
   end
 
   # Building and room
-  #building_code = item["Building"].match(/.*\((.*)\)$/)[1]
   b = Building.where(code: 'TONI').first
 
   room = nil
@@ -92,14 +87,12 @@ items_to_import.each do |item|
   i.location = location
 
   # Invoice
-  i.invoice_number = item['Invoice Number']
-  i.invoice_date = Date.strptime(item['Invoice Date'], '%m/%d/%Y') unless item['Invoice Date'].blank?
+  i.invoice_number = item['Rechnungsnummer']
+  i.invoice_date = Date.strptime(item['Rechnungsdatum'], '%d.%m.%Y') unless item['Rechnungdatum'].blank?
 
+  i.price = item['Preis'] unless item['Preis'].blank?
 
-  i.responsible = item['Responsible person'] unless item['Responsible person'].blank?
-  i.price = item['Initial Price'] unless item['Initial Price'].blank?
-
-  i.last_check = Date.strptime(item['letzte Inventur'], '%m/%d/%Y') unless item['letzte Inventur'].blank?
+  i.last_check = Date.strptime(item['Letzte Inventur'], '%d.%m.%Y') unless item['Letzte Inventur'].blank?
 
   # Supplier
   i.supplier = Supplier.where(name: item['Lieferant']).first
@@ -108,12 +101,9 @@ items_to_import.each do |item|
   end
 
   # Properties
-  i.properties[:anschaffungskategorie] = item['Anschaffungskategorie']
+  #i.properties[:anschaffungskategorie] = item['Anschaffungskategorie']
   #i.properties[:reference] = "invoice" if item["Bezug"] == "laufende Rechnung"
   #i.properties[:reference] = "investment" if item["Bezug"] == "Investition"
-
-  puts i
-
 
   if i.save
   #  puts "Item imported correctly:"
