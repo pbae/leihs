@@ -28,7 +28,6 @@ jobs:
         - cider-ci/tasks/manage_problematic_scenarios.yml
 
       task_defaults:
-        load: 2
         max_trials: 10
         include:
           - cider-ci/task_components/database.yml

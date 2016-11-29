@@ -1,6 +1,6 @@
 script_defaults:
   template_environment_variables: true
-  timeout: 20 minutes
+  timeout: 3 minutes
 
 task_defaults:
 
