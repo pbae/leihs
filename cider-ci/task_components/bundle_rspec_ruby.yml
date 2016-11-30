@@ -2,6 +2,7 @@ traits:
   ruby-install: true
   chruby: true
   Bash: true
+  # tuned now
   ci-g2016-02: true
 
 scripts:
