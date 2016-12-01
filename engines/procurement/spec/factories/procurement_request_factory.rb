@@ -2,17 +2,8 @@ FactoryGirl.define do
   factory :procurement_request, class: Procurement::Request do
     user { FactoryGirl.create(:procurement_access, :requester).user }
 
-    # association :budget_period, factory: :procurement_budget_period
-    budget_period do
-      Procurement::BudgetPeriod.current ||
-          FactoryGirl.create(:procurement_budget_period)
-    end
-
-    # association :category, factory: :procurement_category
-    category do
-      Procurement::Category.first ||
-          FactoryGirl.create(:procurement_category)
-    end
+    association :budget_period, factory: :procurement_budget_period
+    association :category, factory: :procurement_category
 
     article_name { Faker::Lorem.sentence }
     motivation { Faker::Lorem.sentence }
@@ -33,25 +24,14 @@ FactoryGirl.define do
 
     trait :full do
       organization do
-        Procurement::Organization.first ||
-          FactoryGirl.create(:procurement_organization, :with_parent)
+        FactoryGirl.create(:procurement_organization, :with_parent)
       end
 
-      model do
-        Model.first || FactoryGirl.create(:model)
-      end
+      association :model
+      association :supplier
+      association :location
+      association :template, factory: :procurement_template
 
-      supplier do
-        Supplier.first || FactoryGirl.create(:supplier)
-      end
-
-      location do
-        Location.first || FactoryGirl.create(:location)
-      end
-
-      template do
-        Procurement::Template.first || FactoryGirl.create(:procurement_template)
-      end
       approved_quantity 5
       order_quantity 5
       price_currency 'CHF'

@@ -7,7 +7,7 @@ Feature: Exporting the data to a CSV-File
   Scenario Outline: Export data for inspectors and admins
     Given I am <username>
     And all the existing requests are removed from the database
-    And following requests exist for the current budget period
+    And following requests with all values filled in exist for the current budget period
       | quantity | user    |
       | 2        | Barbara |
       | 3        | Roger   |
