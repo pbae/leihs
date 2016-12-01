@@ -78,6 +78,10 @@ module Procurement
             budget_period.in_inspection_phase? or
               budget_period.past? or
               category.inspectable_or_readable_by?(current_user)
+          when _("Inspector's priority")
+            budget_period.in_inspection_phase? or
+              budget_period.past? or
+              category.inspectable_or_readable_by?(current_user)
           end
       end
       # rubocop:enable Metrics/CyclomaticComplexity
