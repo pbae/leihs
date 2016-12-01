@@ -12,6 +12,7 @@ Feature: Exporting the data to a CSV-File
       | 2        | Barbara |
       | 3        | Roger   |
     When I navigate to the requests overview page
+    And I select all categories
     And I export the shown information
     Then the following fields are exported
       | Budget period              |
