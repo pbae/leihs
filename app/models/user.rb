@@ -128,29 +128,22 @@ class User < ActiveRecord::Base
 
   SEARCHABLE_FIELDS = %w(login firstname lastname badge_id)
 
+  # radical simplification here; I have no idea what the previous mess
+  # was supposed to achieve
   scope :search, lambda { |query|
     sql = all
     return sql if query.blank?
-
     sql = sql.uniq.joins(
-      'LEFT JOIN (`delegations_users` AS `du`, `users` AS `u2`) ' \
-      'ON (`du`.`delegation_id` = `users`.`id` AND `du`.`user_id` = `u2`.`id`)'
+      'LEFT JOIN  delegations_users AS du  ' \
+      'ON du.delegation_id = users.id '
     )
-    u2_table = Arel::Table.new(:u2)
-
     query.split.each do|q|
       q = "%#{q}%"
       sql = sql.where(arel_table[:login].matches(q)
                       .or(arel_table[:firstname].matches(q))
                       .or(arel_table[:lastname].matches(q))
                       .or(arel_table[:badge_id].matches(q))
-                      .or(arel_table[:unique_id].matches(q))
-                      .or(u2_table[:login].matches(q))
-                      .or(u2_table[:firstname].matches(q))
-                      .or(u2_table[:lastname].matches(q))
-                      .or(u2_table[:badge_id].matches(q))
-                      .or(u2_table[:unique_id].matches(q))
-                     )
+                      .or(arel_table[:unique_id].matches(q)))
     end
     sql
   }
