@@ -22,13 +22,13 @@ Given /^a model is no longer available$/ do
               else
                 @customer.reservations_bundles.approved.find_by(inventory_pool_id: @current_inventory_pool)
               end
-    reservation = @entity.item_lines.order('RAND()').first
+    reservation = @entity.item_lines.first
     @model = reservation.model
     @initial_quantity = @contract.reservations.where(model_id: @model.id).count
     @max_before = reservation.model.availability_in(@entity.inventory_pool).maximum_available_in_period_summed_for_groups(reservation.start_date, reservation.end_date, reservation.group_ids) || 0
     step 'I add so many reservations that I break the maximal quantity of a model'
   else
-    reservation = @reservations_to_take_back.where(option_id: nil).order('RAND()').first
+    reservation = @reservations_to_take_back.where(option_id: nil).first
     @model = reservation.model
     step 'I open a hand over to this customer'
     @max_before = @model.availability_in(@current_inventory_pool).maximum_available_in_period_summed_for_groups(reservation.start_date, reservation.end_date, reservation.group_ids) || 0
@@ -102,7 +102,7 @@ end
 Given /^one item is not borrowable$/ do
   case @event
     when 'hand_over'
-      @item = @current_inventory_pool.items.in_stock.unborrowable.order('RAND()').first
+      @item = @current_inventory_pool.items.in_stock.unborrowable.first
       step 'I add an item to the hand over'
       @line_id = Reservation.where(item_id: @item.id).first.id
       find(".line[data-id='#{@line_id}']", text: @item.model.name).find('[data-assign-item][disabled]')
@@ -119,7 +119,7 @@ Given /^I take back a(n)?( late)? item$/ do |grammar, is_late|
   overdued_take_backs = @current_inventory_pool.visits.take_back.select{|v| v.reservations.any? {|l| l.is_a? ItemLine}}
   overdued_take_backs = overdued_take_backs.select { |x| x.date < Date.today } if is_late
   overdued_take_back = overdued_take_backs.sample
-  @line_id = overdued_take_back.reservations.where(type: 'ItemLine').order('RAND()').first.id
+  @line_id = overdued_take_back.reservations.where(type: 'ItemLine').first.id
   visit manage_take_back_path(@current_inventory_pool, overdued_take_back.user)
   expect(has_selector?(".line[data-id='#{@line_id}']")).to be true
 end
@@ -150,7 +150,7 @@ end
 When /^one item is defective$/ do
   case @event
     when 'hand_over'
-      @item = @current_inventory_pool.items.in_stock.broken.order('RAND()').first
+      @item = @current_inventory_pool.items.in_stock.broken.first
       step 'I add an item to the hand over'
       sleep 1
       @line_id = find("input[value='#{@item.inventory_code}']").find(:xpath, 'ancestor::div[@data-id]')['data-id']
@@ -165,7 +165,7 @@ end
 Given /^one item is incomplete$/ do
   case @event
     when 'hand_over'
-      @item = @current_inventory_pool.items.in_stock.incomplete.order('RAND()').first
+      @item = @current_inventory_pool.items.in_stock.incomplete.first
       step 'I add an item to the hand over'
       @line_id = find("input[value='#{@item.inventory_code}']").find(:xpath, 'ancestor::div[@data-id]')['data-id']
     when 'take_back'

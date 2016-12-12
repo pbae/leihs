@@ -6,7 +6,7 @@ When /^I add a model by typing in the inventory code of an item of that model to
 end
 
 When /^I start to type the inventory code of an item$/ do
-  @item = @current_inventory_pool.items.borrowable.order('RAND()').first
+  @item = @current_inventory_pool.items.borrowable.first
   find('#add-input input').set @item.inventory_code[0..3]
 end
 
@@ -30,7 +30,7 @@ Then /^the model is added to the contract$/ do
 end
 
 When /^I start to type the name of a model( which is not yet in the contract)?$/ do |arg1|
-  items = @current_inventory_pool.items.borrowable.order('RAND()')
+  items = @current_inventory_pool.items.borrowable
   @item = if arg1
             items.detect {|i| not @contract.models.include? i.model}
           else
@@ -40,7 +40,7 @@ When /^I start to type the name of a model( which is not yet in the contract)?$/
 end
 
 When /^I add a model to the acknowledge which is already existing in the selected date range by providing an inventory code$/ do
-  @line = @contract.reservations.order('RAND()').first
+  @line = @contract.reservations.first
   @old_lines_count = @contract.reservations.count
   @model = @line.model
   find('.line', match: :prefer_exact, text: @model.name)
@@ -108,7 +108,7 @@ Then (/^the model's availability has changed$/) do
 end
 
 When(/^I start searching some model for adding it$/) do
-  @model = @current_inventory_pool.items.borrowable.order('RAND()').first.model
+  @model = @current_inventory_pool.items.borrowable.first.model
   find('#add-input input').set @model.name[0..-2]
   find('#add-input input').click
 end
@@ -141,9 +141,9 @@ end
 
 When(/^I enter a model name( which is not related to my current pool)?$/) do |arg1|
   model = if arg1
-            Model.order('RAND()') - @current_inventory_pool.models
+            Model - @current_inventory_pool.models
           else
-            Model.order('RAND()')
+            Model
           end.first
   find('#assign-or-add-input input').set model.name[0..-2]
 end

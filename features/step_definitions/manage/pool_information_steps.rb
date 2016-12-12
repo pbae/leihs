@@ -135,7 +135,7 @@ Then(/^this configuration is saved$/) do
 end
 
 When(/^a user is suspended automatically due to late contracts$/) do
-  @user = Reservation.where(inventory_pool_id: @current_inventory_pool).signed.where('end_date < ?', Date.today).order('RAND()').first.user
+  @user = Reservation.where(inventory_pool_id: @current_inventory_pool).signed.where('end_date < ?', Date.today).first.user
   @user.automatic_suspend(@current_inventory_pool)
 end
 
@@ -163,9 +163,9 @@ end
 Given(/^I edit an inventory pool( that is( not)? granting automatic access)?$/) do |arg1, arg2|
   if arg1
     b = !arg2
-    @current_inventory_pool = @current_user.inventory_pools.managed.where(automatic_access: b).order('RAND()').first
+    @current_inventory_pool = @current_user.inventory_pools.managed.where(automatic_access: b).first
     @current_inventory_pool ||= begin
-      ip = @current_user.inventory_pools.managed.order('RAND()').first
+      ip = @current_user.inventory_pools.managed.first
       ip.update_attributes(automatic_access: b)
       ip
     end
@@ -237,7 +237,7 @@ When(/^on the inventory pool I enable the automatic suspension for users with ov
 end
 
 When(/^a user is already suspended for this inventory pool$/) do
-  @user = @current_inventory_pool.visits.take_back_overdue.order('RAND()').first.user
+  @user = @current_inventory_pool.visits.take_back_overdue.first.user
   @suspended_until = rand(1.years.from_now..3.years.from_now).to_date
   @suspended_reason = Faker::Lorem.paragraph
 
