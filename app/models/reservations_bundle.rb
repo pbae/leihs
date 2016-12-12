@@ -52,6 +52,15 @@ class ReservationsBundle < ActiveRecord::Base
     .order(nil)
   end
 
+  def contract_id
+    r = id_before_type_cast
+    if r.is_a? String and r.include?('_')
+      nil
+    else
+      r
+    end
+  end
+
   def id
     r = id_before_type_cast
     if r.nil? # it is not persisted
@@ -79,7 +88,7 @@ class ReservationsBundle < ActiveRecord::Base
          AND reservations.user_id = ?
          AND reservations.status = ?)
       SQL
-            r.id,
+            r.contract_id,
             r.user_id,
             r.status)
     end
