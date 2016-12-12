@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'leihs_admin', path: "engines/leihs_admin"
 gem 'procurement', path: "engines/procurement"
@@ -8,7 +8,7 @@ gem 'rails', '4.2.6'
 gem 'activerecord-jdbcpostgresql-adapter', platform: :jruby
 gem 'jdbc-postgres', platform: :jruby
 gem 'pg', platform: :mri
-gem 'pg_tasks', '>= 1.3.3', '< 2.0.0'
+gem 'pg_tasks', '= 2.0.0.pre.1'
 #gem 'pg_tasks', path: '/Users/thomas/Programming/ROR/pg_tasks/'
 
 gem 'uuidtools'
