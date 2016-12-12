@@ -49,7 +49,7 @@ module LeihsAdmin
           .select { |c| c.type == :string and c.null }
           .each do |column|
           r = @connection.execute(
-            "SELECT * FROM `#{table_name}` WHERE `#{column.name}` REGEXP '^\ *$'")
+            %<SELECT * FROM "#{table_name}" WHERE "#{column.name}" ~ '^\\s*$'>)
             .to_a
           next if r.empty?
           @empty_columns[[table_name, column.name]] = r
