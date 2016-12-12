@@ -180,10 +180,10 @@ Given(/^there are( no)? users without access right to this inventory pool$/) do 
 end
 
 Given(/^multiple inventory pools are granting automatic access$/) do
-  InventoryPool.order('RAND()').limit(rand(2..4)).each do |inventory_pool|
+  InventoryPool.limit(rand(2..4)).each do |inventory_pool|
     inventory_pool.update_attributes automatic_access: true
   end
-  if inventory_pool = @current_user.inventory_pools.managed.where.not(automatic_access: true).order('RAND()').first
+  if inventory_pool = @current_user.inventory_pools.managed.where.not(automatic_access: true).first
     inventory_pool.update_attributes automatic_access: true
   end
   @inventory_pools_with_automatic_access = InventoryPool.where(automatic_access: true)
