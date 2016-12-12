@@ -54,6 +54,10 @@ class ModelGroup < ActiveRecord::Base
     ([id] + descendant_ids).flatten.uniq
   end
 
+  def descendant_ids
+    child_links.pluck(:id)
+  end
+
   # NOTE it's now chainable for scopes
   def all_models
     Model
