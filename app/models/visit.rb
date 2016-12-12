@@ -21,26 +21,15 @@ class Visit < ActiveRecord::Base
     select(<<-SQL)
       date, reservations.inventory_pool_id, reservations.user_id, status,
       SUM(quantity) AS quantity,
-      CONV(
-        SUBSTRING(
-          CAST(
-            SHA(
-              CONCAT_WS('_',
-                        date,
-                        reservations.inventory_pool_id,
-                        reservations.user_id, status)) AS CHAR),
-          1,
-          10),
-        16,
-        10) AS id
+      hex_to_int(SUBSTRING(ENCODE(DIGEST(CONCAT_WS('_', now(), 169, 1, 'submitted'), 'sha1'), 'hex'), 1, 10)) as id
     SQL
     .from(<<-SQL)
-      (SELECT IF((status = 'signed'), end_date, start_date) AS date,
+      (SELECT CASE WHEN status = 'signed' THEN end_date ELSE start_date END AS date,
               inventory_pool_id,
               user_id,
               status,
               quantity
-       FROM `reservations`
+       FROM reservations
        WHERE status IN ('submitted', 'approved','signed')) AS reservations
     SQL
     .group('user_id, status, date, inventory_pool_id')
