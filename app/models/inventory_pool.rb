@@ -126,11 +126,11 @@ class InventoryPool < ActiveRecord::Base
         .connection
         .execute('INSERT INTO access_rights ' \
                    '(role, inventory_pool_id, user_id, created_at, updated_at) ' \
-                 "SELECT 'customer', #{id}, users.id, NOW(), NOW() " \
+                 "SELECT 'customer', '#{id}', users.id, NOW(), NOW() " \
                  'FROM users ' \
                  'LEFT JOIN access_rights ' \
                  'ON access_rights.user_id = users.id ' \
-                 "AND access_rights.inventory_pool_id = #{id} " \
+                 "AND access_rights.inventory_pool_id = '#{id}' " \
                  'WHERE access_rights.user_id IS NULL;')
     end
   end
