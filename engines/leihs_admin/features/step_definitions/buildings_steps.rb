@@ -1,7 +1,7 @@
 Then(/^I see a list of buildings$/) do
   find('.nav-tabs .active', text: _('Buildings'))
   within '.list-of-lines' do
-    Building.order('RAND()').limit(5).each do |building|
+    Building.limit(5).each do |building|
       find('.row > .col-sm-4', text: building.name)
     end
   end

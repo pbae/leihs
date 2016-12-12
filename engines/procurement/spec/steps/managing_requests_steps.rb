@@ -146,7 +146,7 @@ steps_for :managing_requests do
 
   step 'I search :boolean model by typing the article name' do |boolean|
     @text = if boolean
-              @model = Model.order('RAND()').first
+              @model = Model.first
               expect(@model).to be
               @model.to_s[0, 4]
             else
