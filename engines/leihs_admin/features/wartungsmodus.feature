@@ -18,7 +18,7 @@ für die Bereiche "Verwalten" und "Verleih" bei Wartungsarbeiten das System zu s
     And the "manage section" is disabled for users
     And users see the note that was defined
 
-  @javascript @personas @v4stable
+  @javascript @personas
   Scenario: Disabling the borrow section
     Given I am in the system-wide settings
     When I choose the function "Disable borrow section"
@@ -38,7 +38,7 @@ für die Bereiche "Verwalten" und "Verleih" bei Wartungsarbeiten das System zu s
     Then the "manage section" is not disabled for users
     And the note entered for the "manage section" is still saved
 
-  @javascript @personas @v4stable
+  @javascript @personas
   Scenario: Enabling the borrow section
     Given the "borrow section" is disabled
     And I am in the system-wide settings

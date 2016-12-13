@@ -1,6 +1,6 @@
 Feature: Delegation
 
-  @javascript @personas @browser @v4stable
+  @javascript @personas @browser
   Scenario: Delete delegation
     Given I am Gino
     And I can find the user administration features in the "Admin" area under "Users"

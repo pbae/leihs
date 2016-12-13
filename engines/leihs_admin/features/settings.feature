@@ -1,6 +1,6 @@
 Feature: Defining application settings through web interface
 
-  @javascript @personas @v4stable
+  @javascript @personas
   Scenario: Editing the settings
     Given I am Ramon
     When I go to the settings page

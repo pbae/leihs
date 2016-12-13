@@ -3,17 +3,17 @@ Feature: Statistics on lending and inventory
   Background:
     Given I am Ramon
 
-  @personas @v4stable
+  @personas
   Scenario: Where the statistics are visible
     When I am in the admin section
     Then I can choose to switch to the statistics section
 
-  @personas @v4stable
+  @personas
   Scenario: Title of the statistics section
     Given I am in the statistics section
     Then the page title is 'Statistics'
 
-  @personas @v4stable
+  @personas
   Scenario: Filtering statistics by time window
     Given I am in the statistics section
     And I select the statistics subsection "Who borrowed the most things?"
