@@ -12,13 +12,13 @@ jobs:
     run_when:
       branch name matches master or procurement:
         type: branch
-        include_match: '^.*(master|procurement).*$'
+        include_match: '^.*(master|procurement|v4_pg_tests).*$'
         exclude_match: '^.*(no-ci|hotspot).*$'
 
     context:
 
       task_defaults:
-        max_trials: 2
+        max_trials: 1
         include:
           - cider-ci/task_components/database.yml
 
