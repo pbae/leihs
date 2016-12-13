@@ -111,26 +111,6 @@ class Item < ActiveRecord::Base
              'LEFT JOIN models AS m2 ON m2.id = i2.model_id) ' \
              'AS full_text ON items.id = full_text.id')
       .where(Arel::Table.new(:full_text)[:text].matches_all(q))
-
-    #     sql = select("DISTINCT items.*").
-    #       joins("LEFT JOIN models ON models.id = items.model_id").
-    #       joins("LEFT JOIN inventory_pools ON
-    #       inventory_pools.id = items.inventory_pool_id")
-    #
-    #     query.split.each{|q|
-    #       q = "%#{q}%"
-    #       sql = sql.where(arel_table[:inventory_code].matches(q).
-    #                       or(arel_table[:serial_number].matches(q)).
-    #                       or(arel_table[:invoice_number].matches(q)).
-    #                       or(arel_table[:note].matches(q)).
-    #                       or(arel_table[:name].matches(q)).
-    #                       or(arel_table[:user_name].matches(q)).
-    #                       or(arel_table[:properties].matches(q)).
-    #                       or(Model.arel_table[:name].matches(q)).
-    #                       or(Model.arel_table[:manufacturer].matches(q)).
-    #                       or(InventoryPool.arel_table[:name].matches(q)))
-    #     }
-    #     sql
   }
 
   def self.filter(params, inventory_pool = nil)
