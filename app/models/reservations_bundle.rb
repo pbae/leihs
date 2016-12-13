@@ -47,7 +47,8 @@ class ReservationsBundle < ActiveRecord::Base
     .group(<<-SQL)
       reservations.contract_id::text,
       reservations.user_id,
-      reservations.inventory_pool_id
+      reservations.inventory_pool_id,
+      reservations.created_at
     SQL
     .order(nil)
   end
@@ -133,8 +134,8 @@ class ReservationsBundle < ActiveRecord::Base
 
   scope :with_verifiable_user, -> { having('verifiable_user = 1') }
   scope(:with_verifiable_user_and_model,
-        -> { having('verifiable_user_and_model = 1') })
-  scope :no_verification_required, -> { having('verifiable_user_and_model != 1') }
+        -> { having('COUNT(partitions.id) > 0') })
+  scope :no_verification_required, -> { having('COUNT(partitions.id) = 0') }
 
   def to_be_verified?
     verifiable_user_and_model == 1

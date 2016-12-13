@@ -62,7 +62,7 @@ class Reservation < ActiveRecord::Base
       conditions = params[:contract_ids].map do |p|
         if p.include?('_')
           format_args = p.split('_')[0, 2]
-          format("(status = '%s' AND user_id = %d)", *format_args)
+          format("(status = '%s' AND user_id = '%s')", *format_args)
         else
           format('contract_id = %d', p)
         end
