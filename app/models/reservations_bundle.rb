@@ -106,7 +106,6 @@ class ReservationsBundle < ActiveRecord::Base
            LINE_CONDITIONS,
            foreign_key: :inventory_pool_id,
            primary_key: :inventory_pool_id)
-  has_many :models, -> { select('models.*, reservations.*').order('models.product ASC').uniq }, through: :item_lines
   has_many :items, through: :item_lines
   has_many :options, -> { uniq }, through: :option_lines
 
@@ -114,6 +113,12 @@ class ReservationsBundle < ActiveRecord::Base
   # has a inventory_pool_id as primary_key
   def reservation_ids
     reservations.pluck :id
+  end
+
+  #######################################################
+
+  def models
+    Model.where(id: item_lines.pluck(&:model_id)).order('product ASC').uniq
   end
 
   #######################################################
