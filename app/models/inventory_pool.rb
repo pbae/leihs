@@ -49,9 +49,6 @@ class InventoryPool < ActiveRecord::Base
   has_many :item_lines, dependent: :restrict_with_exception
   has_many :visits
 
-  # tmp#2#, :finder_sql => 'SELECT * FROM `groups`
-  # WHERE (`groups`.inventory_pool_id = #{id}
-  # OR `groups`.inventory_pool_id IS NULL)'
   has_many :groups do
     def with_general
       all + [Group::GENERAL_GROUP_ID]

@@ -117,9 +117,6 @@ class Visit < ActiveRecord::Base
     read_attribute(:status).to_sym
   end
 
-  # NOTE: `total_entries` from will_paginate gem does not
-  # work with our custom `Visit.default_scope`, thus we
-  # use our own `Visit.total_count_for_paginate`
   def self.total_count_for_paginate
     scope_sql = \
       Visit
