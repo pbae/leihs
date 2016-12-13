@@ -78,9 +78,9 @@ class ModelGroup < ActiveRecord::Base
   # NOTE it's now chainable for scopes
   def all_models
     Model
-      .select('DISTINCT models.*')
       .joins(:model_links)
       .where(model_links: { model_group_id: self_and_descendant_ids })
+      .uniq
   end
 
   def image

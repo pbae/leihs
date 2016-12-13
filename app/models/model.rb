@@ -137,13 +137,13 @@ class Model < ActiveRecord::Base
   scope :packages, -> { where(is_package: true) }
 
   scope :with_properties, lambda {
-                            select('DISTINCT models.*')
-      .joins('LEFT JOIN properties ON properties.model_id = models.id')
+    joins('LEFT JOIN properties ON properties.model_id = models.id')
       .where.not(properties: { model_id: nil })
+      .uniq
   }
 
   scope :by_inventory_pool, lambda { |inventory_pool|
-                              select('DISTINCT models.*').joins(:items)
+    joins(:items)
       .where(['items.inventory_pool_id = ?', inventory_pool])
   }
 
@@ -208,7 +208,7 @@ class Model < ActiveRecord::Base
           return all if query.blank?
 
           # old# joins(:categories, :properties, :items)
-          sql = select('DISTINCT models.*')
+          sql = uniq
           if fields.empty?
             sql = sql
               .joins('LEFT JOIN model_links AS ml2 ' \
