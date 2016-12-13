@@ -54,6 +54,10 @@ class ModelGroup < ActiveRecord::Base
     ([id] + descendant_ids).flatten.uniq
   end
 
+  def descendant_ids
+    child_links.pluck(:id)
+  end
+
   # NOTE it's now chainable for scopes
   def all_models
     Model
@@ -68,8 +72,8 @@ class ModelGroup < ActiveRecord::Base
 
   scope :roots, (lambda do
     joins('LEFT JOIN model_group_links AS mgl ' \
-          'ON mgl.descendant_id = model_groups.id')
-      .where('mgl.descendant_id IS NULL')
+          'ON mgl.child_id = model_groups.id')
+      .where('mgl.child_id IS NULL')
   end)
 
   # scope :accessible_roots, lambda do |user_id|

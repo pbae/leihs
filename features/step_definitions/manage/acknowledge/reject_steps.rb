@@ -4,7 +4,7 @@
 #end
 
 When /^I reject a contract$/ do
-  @contract = @current_inventory_pool.reservations_bundles.submitted.order('RAND()').first
+  @contract = @current_inventory_pool.reservations_bundles.submitted.first
 
   step %Q(I uncheck the "No verification required" button)
 

@@ -12,7 +12,7 @@ Then(/^I don't see empty orders in the list of orders$/) do
 end
 
 When(/^I open a suspended user's order$/) do
-  user = @current_inventory_pool.reservations_bundles.submitted.order('RAND()').first.user
+  user = @current_inventory_pool.reservations_bundles.submitted.first.user
   ensure_suspended_user(user, @current_inventory_pool)
   step 'I navigate to the open orders'
   step 'I open an order placed by "%s"' % user
@@ -243,15 +243,15 @@ end
 
 Then(/^I can add models$/) do
   @model = if @current_user.access_right_for(@current_inventory_pool).role == :group_manager
-             @current_inventory_pool.models.order('RAND()').select {|m| m.availability_in(@current_inventory_pool).maximum_available_in_period_summed_for_groups(Date.today, Date.today) > 0 }
+             @current_inventory_pool.models.select {|m| m.availability_in(@current_inventory_pool).maximum_available_in_period_summed_for_groups(Date.today, Date.today) > 0 }
            else
-             @current_inventory_pool.models.order('RAND()')
+             @current_inventory_pool.models
            end.detect {|m| m.items.where(inventory_pool_id: @current_inventory_pool, parent_id: nil).exists? }
   hand_over_assign_or_add @model.to_s
 end
 
 Then(/^I can add options$/) do
-  option = @current_inventory_pool.options.order('RAND()').first
+  option = @current_inventory_pool.options.first
   hand_over_assign_or_add option.to_s
 end
 
@@ -295,7 +295,7 @@ Given(/^(orders|contracts|visits) exist$/) do |arg1|
 end
 
 When(/^I search( globally)? for (an order|a contract|a visit)( with its purpose)?$/) do |arg0, arg1, arg2|
-  @contract = @contracts.order('RAND()').first
+  @contract = @contracts.first
   @search_term = if arg2
                    @contract.purpose.split.sample.gsub(/^\W*/, '').gsub(/\W*$/, '')
                  else

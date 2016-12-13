@@ -15,7 +15,7 @@ Given(/^I am listing users$/) do
   if @current_user == User.find_by_login('gino')
     step 'I am looking at the user list outside an inventory pool'
   else
-    @inventory_pool = @current_inventory_pool || @current_user.inventory_pools.order('RAND()').first
+    @inventory_pool = @current_inventory_pool || @current_user.inventory_pools.first
     visit manage_inventory_pool_users_path(@inventory_pool)
   end
 end
@@ -56,7 +56,7 @@ Given(/^I am editing the user "(.*?)"$/) do |persona|
   if @current_user.access_rights.active.map(&:role).include? :admin
     visit admin.edit_user_path @user
   else
-    ip = @current_user.inventory_pools.managed.where('inventory_pools.id' => @user.inventory_pools.select('inventory_pools.id')).order('RAND()').first
+    ip = @current_user.inventory_pools.managed.where('inventory_pools.id' => @user.inventory_pools.select('inventory_pools.id')).first
     visit manage_edit_inventory_pool_user_path(ip, @user)
   end
 end

@@ -1,7 +1,7 @@
 # -*- encoding : utf-8 -*-
 
 When(/^I open a contract for acknowledgement( with more then one line)?(, whose start date is not in the past)?$/) do |arg1, arg2|
-  contracts = @current_inventory_pool.reservations_bundles.submitted.order('RAND()')
+  contracts = @current_inventory_pool.reservations_bundles.submitted
   contracts = contracts.select { |c| c.reservations.size > 1 and c.reservations.map(&:model_id).uniq.size > 1 } if arg1
   contracts = contracts.select { |c| c.min_date >= Time.zone.today } if arg2
 
@@ -44,9 +44,9 @@ end
 When(/^I change a contract reservations time range$/) do
   @line =
     if @contract
-      @contract.reservations.order('RAND()').first
+      @contract.reservations.first
     else
-      @customer.visits.hand_over.where(inventory_pool_id: @current_inventory_pool).first.reservations.order('RAND()').first
+      @customer.visits.hand_over.where(inventory_pool_id: @current_inventory_pool).first.reservations.first
     end
   @line_element = all(".line[data-ids*='#{@line.id}']").first || all(".line[data-id='#{@line.id}']").first
   step 'I open the booking calendar for this line'
@@ -90,9 +90,9 @@ When(/^I change a contract reservations quantity$/) do
   if @line_element.nil? and page.has_selector?('#hand-over-view')
     @line =
       if @contract
-        @contract.reservations.order('RAND()').first
+        @contract.reservations.first
       else
-        @customer.visits.hand_over.where(inventory_pool_id: @current_inventory_pool).first.reservations.order('RAND()').first
+        @customer.visits.hand_over.where(inventory_pool_id: @current_inventory_pool).first.reservations.first
       end
     @total_quantity = @line.contract.reservations.where(model_id: @line.model_id).to_a.sum(&:quantity)
     @new_quantity = @line.quantity + 1

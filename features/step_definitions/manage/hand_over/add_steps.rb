@@ -30,7 +30,7 @@ When /^I add (a|an|a borrowable|an unborrowable) (item|license) to the hand over
              items.in_stock.where(is_borrowable: true)
            when 'an unborrowable'
              items.in_stock.where(is_borrowable: false)
-           end.order('RAND()').first
+           end.first
   @model = @item.model
   @inventory_codes << @item.inventory_code
   find('#assign-or-add-input input').set @item.model.name
@@ -56,7 +56,7 @@ When /^I add an option to the hand over by providing an inventory code and a dat
                                          else
                                            []
                                          end
-                      (@current_inventory_pool.options.order('RAND()') - existing_options).first
+                      (@current_inventory_pool.options - existing_options).first
                     end.inventory_code
   find('#assign-or-add-input input').set @inventory_code
   find('#assign-or-add button').click
@@ -81,7 +81,7 @@ Then /^the (.*?) is added to the hand over$/ do |type|
 end
 
 When /^I add an option to the hand over which is already existing in the selected date range by providing an inventory code$/ do
-  option_line = @contract.option_lines.order('RAND()').first
+  option_line = @contract.option_lines.first
   @option = option_line.option
   @quantity_before = option_line.quantity
   @n = rand(2..5)
@@ -152,7 +152,7 @@ Then /^each model of the template is added to the hand over for the provided dat
 end
 
 When /^I add so many reservations that I break the maximal quantity of a model$/ do
-  @model ||= (@contract || @customer.reservations_bundles.approved.find_by(inventory_pool_id: @current_inventory_pool)).item_lines.order('RAND()').first.model
+  @model ||= (@contract || @customer.reservations_bundles.approved.find_by(inventory_pool_id: @current_inventory_pool)).item_lines.first.model
   @target_name = @model.name
   quantity_to_add = if @contract
                       start_date = Date.parse find('#add-start-date').value

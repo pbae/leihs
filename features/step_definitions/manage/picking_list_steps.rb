@@ -16,10 +16,10 @@ Given(/^I open (a|the) picking list( for a signed contract)?$/) do |arg1, arg2|
   else
     @contract = case arg1
                   when 'a'
-                    @current_inventory_pool.reservations_bundles.order('RAND()').first
+                    @current_inventory_pool.reservations_bundles.first
                   when 'the'
                     if arg2
-                      @current_inventory_pool.reservations_bundles.signed.order('RAND()').first
+                      @current_inventory_pool.reservations_bundles.signed.first
                     end
                 end
     visit manage_picking_list_path(@current_inventory_pool, @contract)

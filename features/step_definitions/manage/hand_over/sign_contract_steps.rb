@@ -235,7 +235,7 @@ When(/^I select an overdue item line and assign an inventory code$/) do
 end
 
 When(/^I assign an inventory code to the item line$/) do
-  item = @current_inventory_pool.items.in_stock.where(model_id: @item_line.model).order('RAND()').first
+  item = @current_inventory_pool.items.in_stock.where(model_id: @item_line.model).first
   expect(item).not_to be_nil
   @selected_items ||= []
   within(".line[data-id='#{@item_line.id}']") do

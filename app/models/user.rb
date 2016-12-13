@@ -33,13 +33,13 @@ class User < ActiveRecord::Base
       joins(:items)
         .where(items: { retired: nil, is_borrowable: true, parent_id: nil })
         .joins("INNER JOIN (#{Partition.query}) AS pwg " \
-               'ON `models`.`id` = `pwg`.`model_id` ' \
-               'AND `inventory_pools`.`id` = `pwg`.`inventory_pool_id` ' \
-               'AND `pwg`.`quantity` > 0 ' \
-               'AND (`pwg`.`group_id` IN ' \
-                 '(SELECT `group_id` FROM `groups_users` ' \
-                 "WHERE `user_id` = #{proxy_association.owner.id}) " \
-                   'OR `pwg`.`group_id` IS NULL)')
+               'ON models.id = pwg.model_id ' \
+               'AND inventory_pools.id = pwg.inventory_pool_id ' \
+               'AND pwg.quantity > 0 ' \
+               'AND (pwg.group_id IN ' \
+                 '(SELECT group_id FROM groups_users ' \
+                 "WHERE user_id = '#{proxy_association.owner.id}') " \
+                   'OR pwg.group_id IS NULL)')
     end
   end
 
@@ -47,13 +47,13 @@ class User < ActiveRecord::Base
     def with_borrowable_items
       where(items: { retired: nil, is_borrowable: true, parent_id: nil })
       .joins("INNER JOIN (#{Partition.query}) AS pwg " \
-             'ON `models`.`id` = `pwg`.`model_id` ' \
-             'AND `inventory_pools`.`id` = `pwg`.`inventory_pool_id` ' \
-             'AND `pwg`.`quantity` > 0 ' \
-             'AND (`pwg`.`group_id` IN ' \
-               '(SELECT `group_id` FROM `groups_users` ' \
-               "WHERE `user_id` = #{proxy_association.owner.id}) " \
-                 'OR `pwg`.`group_id` IS NULL)')
+             'ON models.id = pwg.model_id ' \
+             'AND inventory_pools.id = pwg.inventory_pool_id ' \
+             'AND pwg.quantity > 0 ' \
+             'AND (pwg.group_id IN ' \
+               '(SELECT group_id FROM groups_users ' \
+               "WHERE user_id = '#{proxy_association.owner.id}') " \
+                 'OR pwg.group_id IS NULL)')
     end
   end
 
@@ -62,10 +62,10 @@ class User < ActiveRecord::Base
 
     ancestors = \
       Category \
-        .joins('INNER JOIN `model_group_links` ' \
-               'ON `model_groups`.`id` = `model_group_links`.`ancestor_id`')
+        .joins('INNER JOIN model_group_links ' \
+               'ON model_groups.id = model_group_links.parent_id')
         .where(model_group_links: \
-                 { descendant_id: borrowable_categories.pluck(:id) })
+                 { child_id: borrowable_categories.pluck(:id) })
         .uniq
 
     [borrowable_categories, ancestors].flatten.uniq
@@ -100,9 +100,9 @@ class User < ActiveRecord::Base
   validates_uniqueness_of :email, unless: :delegation?
   validates :email, format: /.+@.+\..+/, allow_blank: true
 
-  # tmp#2#, :finder_sql => 'SELECT * FROM `groups`
-  # INNER JOIN `groups_users` ON `groups`.id = `groups_users`.group_id
-  # OR groups.inventory_pool_id IS NULL WHERE (`groups_users`.user_id = #{id})'
+  # tmp#2#, :finder_sql => 'SELECT * FROM groups
+  # INNER JOIN groups_users ON groups.id = groups_users.group_id
+  # OR groups.inventory_pool_id IS NULL WHERE (groups_users.user_id = #{id})'
   has_and_belongs_to_many :groups do
     def with_general
       to_a + [Group::GENERAL_GROUP_ID]
