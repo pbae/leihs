@@ -113,9 +113,9 @@ class Item < ActiveRecord::Base
       .where(Arel::Table.new(:full_text)[:text].matches_all(q))
 
     #     sql = select("DISTINCT items.*").
-    #       joins("LEFT JOIN `models` ON `models`.`id` = `items`.`model_id`").
-    #       joins("LEFT JOIN `inventory_pools` ON
-    #       `inventory_pools`.`id` = `items`.`inventory_pool_id`")
+    #       joins("LEFT JOIN models ON models.id = items.model_id").
+    #       joins("LEFT JOIN inventory_pools ON
+    #       inventory_pools.id = items.inventory_pool_id")
     #
     #     query.split.each{|q|
     #       q = "%#{q}%"

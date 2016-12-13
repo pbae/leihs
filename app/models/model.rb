@@ -211,19 +211,19 @@ class Model < ActiveRecord::Base
           sql = select('DISTINCT models.*')
           if fields.empty?
             sql = sql
-              .joins('LEFT JOIN `model_links` AS ml2 ' \
-                     'ON `ml2`.`model_id` = `models`.`id`')
-              .joins('LEFT JOIN `model_groups` AS mg2 ON ' \
-                     '`mg2`.`id` = `ml2`.`model_group_id` ' \
-                     "AND `mg2`.`type` = 'Category'")
-              .joins('LEFT JOIN `properties` AS p2 ' \
-                     'ON `p2`.`model_id` = `models`.`id`')
+              .joins('LEFT JOIN model_links AS ml2 ' \
+                     'ON ml2.model_id = models.id')
+              .joins('LEFT JOIN model_groups AS mg2 ON ' \
+                     'mg2.id = ml2.model_group_id ' \
+                     "AND mg2.type = 'Category'")
+              .joins('LEFT JOIN properties AS p2 ' \
+                     'ON p2.model_id = models.id ')
           end
           if fields.empty? or fields.include?(:items)
             sql = sql
-              .joins('LEFT JOIN `items` AS i2 ON `i2`.`model_id` = `models`.`id`')
-              .joins('LEFT JOIN `items` AS i3 ON `i3`.`parent_id` = `i2`.`id`')
-              .joins('LEFT JOIN `models` AS m3 ON `m3`.`id` = `i3`.`model_id`')
+              .joins('LEFT JOIN items AS i2 ON i2.model_id = models.id')
+              .joins('LEFT JOIN items AS i3 ON i3.parent_id = i2.id')
+              .joins('LEFT JOIN models AS m3 ON m3.id = i3.model_id')
           end
 
           # FIXME: refactor to Arel
@@ -321,8 +321,8 @@ class Model < ActiveRecord::Base
                  else
                    models
                      .joins(:items)
-                     .where(':id IN (`items`.`owner_id`, ' \
-                                    '`items`.`inventory_pool_id`)',
+                     .where(':id IN (items.owner_id, ' \
+                                    'items.inventory_pool_id)',
                             id: inventory_pool.id)
                      .uniq
                  end
