@@ -17,7 +17,7 @@ Feature: Database
     When I visit "/admin/database/consistency"
     Then all is correct
 
-  @personas
+  @personas @v4stable
   Scenario: Check empty columns
     When I visit "/admin/database/empty_columns"
     Then all is correct

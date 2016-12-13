@@ -1,18 +1,18 @@
 jobs:
 
-  procurement_scenarios:
+  leihs_admin_v4stable_scenarios:
 
-    name: 'Procurement: Scenarios'
+    name: 'Admin: v4stable Scenarios'
 
     description: |
-      Run Procurement engine scenarios under MRI
+      Run v4stable Admin engine scenarios under MRI
 
     priority: 0
 
     run_when:
-      branch name matches master or procurement:
+      branch name matches master or admin:
         type: branch
-        include_match: '^.*(master|procurement|v4_pg_tests).*$'
+        include_match: '^.*(master|admin|v4_pg_tests).*$'
         exclude_match: '^.*(no-ci|hotspot).*$'
 
     context:
@@ -24,4 +24,4 @@ jobs:
 
       include:
         - cider-ci/shared/main_context.yml
-        - cider-ci/tasks/procurement_scenarios.yml
+        - cider-ci/tasks/leihs_admin_v4stable_scenarios.yml

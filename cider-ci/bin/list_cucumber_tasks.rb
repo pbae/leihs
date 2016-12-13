@@ -47,7 +47,7 @@ ENGINES.each do |engine|
   create_feature_tasks(filepath, engine_feature_files)
 end
 
-EXCLUDE_TAGS = %w(@upcoming @generating_personas @manual @problematic)
+EXCLUDE_TAGS = %w(@upcoming @generating_personas @manual @problematic @v4stable)
 
 def create_scenario_tasks(filepath, feature_files_paths, test_with, tags: nil, exclude_dir: nil)
   File.open(filepath,'w') do |f|
@@ -110,6 +110,7 @@ create_scenario_tasks(filepath, manage_feature_files_paths, :cucumber, exclude_d
 filepath = 'cider-ci/tasks/manage_problematic_scenarios.yml'
 create_scenario_tasks(filepath, manage_feature_files_paths, :cucumber, tags: ['@problematic'], exclude_dir: 'borrow')
 
+
 ############################## BORROW ###################################
 
 borrow_feature_files_paths = ['features/borrow/*']
@@ -131,5 +132,8 @@ ENGINES.each do |engine|
   else
     engine_feature_files_paths = ["engines/#{engine}/**/*.feature"]
     create_scenario_tasks(filepath, engine_feature_files_paths, :cucumber)
+
+    filepath = "cider-ci/tasks/#{engine}_v4stable_scenarios.yml"
+    create_scenario_tasks(filepath, engine_feature_files_paths, :cucumber, tags:['@v4stable'])
   end
 end

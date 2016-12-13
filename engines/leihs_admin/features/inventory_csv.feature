@@ -1,6 +1,6 @@
 Feature: Inventory (CSV export)
 
-  @personas
+  @personas @v4stable
   Scenario: Export of the entire inventory to a CSV file
     Given I am Gino
     And I open the list of inventory pools

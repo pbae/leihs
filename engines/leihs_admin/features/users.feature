@@ -3,7 +3,7 @@ Feature: Admin users
   Background:
     Given I am Gino
 
-  @personas
+  @personas @v4stable
   Scenario: Give admin rights to another user (as administrator)
     Given I am editing a user that has no access rights and is not an admin
     When I assign the admin role to this user
@@ -12,7 +12,7 @@ Feature: Admin users
     And this user has the admin role
     And all their previous access rights remain intact
 
-  @personas
+  @personas @v4stable
   Scenario: Remove admin rights from a user, as administrator
     Given I am editing a user who has the admin role and access to inventory pools
     When I remove the admin role from this user
@@ -20,7 +20,7 @@ Feature: Admin users
     Then this user no longer has the admin role
     And all their previous access rights remain intact
 
-  @personas
+  @personas @v4stable
   Scenario: Add a new user as an administrator, from outside the inventory pool
     Given I am looking at the user list outside an inventory pool
     When I navigate from here to the user creation page
@@ -35,12 +35,12 @@ Feature: Admin users
     And the new user has been created
     And he does not have access to any inventory pools and is not an administrator
 
-  @personas
+  @personas @v4stable
   Scenario: Alphabetic sort order of users outside an inventory pool
     Given I am looking at the user list outside an inventory pool
     # What's here? We need to confirm that A comes before B in the list
 
-  @javascript @personas @browser
+  @javascript @personas @browser @v4stable
   Scenario: Deleting a user as an administrator
     Given I am looking at the user list outside an inventory pool
     And I pick a user without access rights, orders or contracts
@@ -48,19 +48,19 @@ Feature: Admin users
     Then that user has been deleted from the list
     And that user is deleted
 
-  @personas
+  @personas @v4stable
   Scenario: Access user list within inventory pool inventory pool as an administrator
     Given I do not have access as manager to any inventory pools
     When I am looking at the user list in any inventory pool
     Then I am redirected to the login page
 
-  @personas
+  @personas @v4stable
   Scenario: Listing all user's access rights
     Given I am looking at the user list outside an inventory pool
     And I edit a user that has access rights
     Then inventory pools they have access to are listed with the respective role
 
-  @javascript @personas @browser
+  @javascript @personas @browser @v4stable
   Scenario: Requirements for deleting a user
     Given I am looking at the user list outside an inventory pool
     When I pick one user with access rights, one with orders and one with contracts
