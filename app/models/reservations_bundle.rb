@@ -105,7 +105,7 @@ class ReservationsBundle < ActiveRecord::Base
            LINE_CONDITIONS,
            foreign_key: :inventory_pool_id,
            primary_key: :inventory_pool_id)
-  has_many :models, -> { order('models.product ASC').uniq }, through: :item_lines
+  has_many :models, -> { select('models.*, reservations.*').order('models.product ASC').uniq }, through: :item_lines
   has_many :items, through: :item_lines
   has_many :options, -> { uniq }, through: :option_lines
 
