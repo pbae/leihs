@@ -52,7 +52,7 @@
       App.Purpose.addRecord new App.Purpose purpose
 
     App.Contract.addRecord new App.Contract #{@contract.to_json}
-    App.Contract.current = App.Contract.find('#{@contract.id}')
+    App.Contract.current = App.Contract.find("#{@contract.id}")
 
     for model in #{@models.to_json}
       App.Model.addRecord new App.Model model
@@ -62,6 +62,5 @@
 
     new App.ContractsEditController
       el: "#edit-contract-view"
-      contract: App.Contract.find '#{@contract.id}'
-      purpose: App.Purpose.find #{@purposes.first.id}
--#                                # TODO forward all purposes ??
+      contract: App.Contract.find "#{@contract.id}"
+      purpose: App.Purpose.find "#{@purposes.first.id}"
