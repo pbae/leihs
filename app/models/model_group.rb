@@ -50,12 +50,29 @@ class ModelGroup < ActiveRecord::Base
   # ModelGroupLink.create parent: p, child: c
 
   def self_and_descendant_ids
-    # OPTIMIZE: flatten and unique really needed?
-    ([id] + descendant_ids).flatten.uniq
+    descendant_ids + [id]
   end
 
-  def descendant_ids
-    child_links.pluck(:id)
+  def descendant_ids(alread_found_descendants = Set.new([]))
+    if alread_found_descendants.empty?
+      children = Set.new(child_links.pluck(:child_id))
+      if children.empty?
+        children
+      else
+        descendant_ids children
+      end
+    else
+      with_children_children = Set.new(alread_found_descendants + Set.new(alread_found_descendants.map{|did|self.class.find(did).child_links.pluck(:child_id)}.flatten))
+      if with_children_children = alread_found_descendants
+        with_children_children
+      else
+        descendant_ids with_children_children
+      end
+    end
+  end
+
+  def self_and_descendants
+    self.class.where(id: self_and_descendant_ids.to_a)
   end
 
   # NOTE it's now chainable for scopes
