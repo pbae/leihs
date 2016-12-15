@@ -64,7 +64,7 @@ class Reservation < ActiveRecord::Base
           format_args = p.split('_')[0, 2]
           format("(status = '%s' AND user_id = '%s')", *format_args)
         else
-          format('contract_id = %d', p)
+          format("contract_id = '%s'", p)
         end
       end.join(' OR ')
       reservations = reservations.where(conditions)
