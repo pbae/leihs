@@ -13,7 +13,7 @@ jobs:
       branch name matches master or procurement:
         type: branch
         include_match: '^.*(master|procurement|v4_pg_tests).*$'
-        exclude_match: '^.*(no-ci|hotspot).*$'
+        exclude_match: '^.*(v4_pg|no-ci|hotspot).*$'
 
     context:
 
