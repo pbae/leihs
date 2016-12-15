@@ -1,7 +1,7 @@
 class Borrow::TemplatesController < Borrow::ApplicationController
 
   before_action only: [:availability, :show, :add_to_order, :select_dates] do
-    @template = current_user.templates.detect { |t| t.id == params[:id].to_i }
+    @template = current_user.templates.detect { |t| t.id == params[:id] }
   end
 
   def add_to_order
@@ -53,7 +53,7 @@ class Borrow::TemplatesController < Borrow::ApplicationController
     @models = @template.models
     @reservations = \
       params[:reservations].delete_if { |l| l['quantity'].to_i == 0 }.map do |line|
-        model = @models.detect { |m| m.id == line['model_id'].to_i }
+        model = @models.detect { |m| m.id == line['model_id'] }
         quantity = line['quantity'].to_i
         {
           model_link_id: \
@@ -73,7 +73,7 @@ class Borrow::TemplatesController < Borrow::ApplicationController
       params[:reservations]
         .delete_if { |l| l['quantity'].to_i == 0 }
         .map do |line|
-          model = @models.detect { |m| m.id == line['model_id'].to_i }
+          model = @models.detect { |m| m.id == line['model_id'] }
           quantity = line['quantity'].to_i
           start_date = if line['start_date']
                          Date.parse(line['start_date'])

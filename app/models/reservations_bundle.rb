@@ -66,10 +66,8 @@ class ReservationsBundle < ActiveRecord::Base
     r = id_before_type_cast
     if r.nil? # it is not persisted
       "#{status}_#{user_id}_#{inventory_pool_id}"
-    elsif r.is_a? String and r.include?('_')
-      r
     else
-      r.to_i
+      r
     end
   end
 

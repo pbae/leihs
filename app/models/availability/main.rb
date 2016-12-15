@@ -81,7 +81,6 @@ module Availability
           reservation.concat_group_ids
             .to_s
             .split(',')
-            .map(&:to_i) # read from the running_reservation
 
         # if overdue, extend end_date to today
         # given a reservation is running until the 24th
