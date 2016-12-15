@@ -5,6 +5,7 @@ class Manage::VisitsController < Manage::ApplicationController
       format.html
       format.json do
         visits = Visit.filter(params, current_inventory_pool)
+        binding.pry
         unless params[:paginate] == 'false'
           @visits = visits.default_paginate(params)
           # NOTE: `total_entries` from will_paginate gem does not

@@ -106,7 +106,6 @@ class ReservationsBundle < ActiveRecord::Base
            foreign_key: :inventory_pool_id,
            primary_key: :inventory_pool_id)
   has_many :items, through: :item_lines
-  has_many :options, -> { uniq }, through: :option_lines
 
   # NOTE we need this method because the association
   # has a inventory_pool_id as primary_key
@@ -118,6 +117,10 @@ class ReservationsBundle < ActiveRecord::Base
 
   def models
     Model.where(id: item_lines.pluck(&:model_id)).order('product ASC').uniq
+  end
+
+  def options
+    Option.where(id: option_lines.pluck(&:option_id)).uniq
   end
 
   #######################################################
