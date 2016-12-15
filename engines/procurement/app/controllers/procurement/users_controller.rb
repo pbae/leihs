@@ -48,7 +48,7 @@ module Procurement
       Procurement::Organization.cleanup
 
       existing_admin_ids = Access.admins.pluck(:user_id)
-      admin_ids = (params[:admin_ids] || '').split(',').map &:to_i
+      admin_ids = (params[:admin_ids] || '').split(',')
       (existing_admin_ids - admin_ids).each do |user_id|
         Access.admins.find_by(user_id: user_id).destroy
       end
