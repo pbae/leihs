@@ -28,7 +28,7 @@ class ReservationsBundle < ActiveRecord::Base
       MAX(reservations.status) AS status,
       reservations.user_id,
       reservations.inventory_pool_id,
-      string_agg(reservations.delegated_user_id::text, '_'),
+      reservations.delegated_user_id,
       bool_or(groups.is_verification_required) AS verifiable_user,
       COUNT(partitions.id) > 0 AS verifiable_user_and_model,
       MAX(reservations.created_at) AS created_at
@@ -48,7 +48,8 @@ class ReservationsBundle < ActiveRecord::Base
       reservations.contract_id::text,
       reservations.user_id,
       reservations.inventory_pool_id,
-      reservations.created_at
+      reservations.created_at,
+      reservations.delegated_user_id
     SQL
     .order(nil)
   end
