@@ -54,7 +54,7 @@ class Model < ActiveRecord::Base
         unless new_partitions.blank?
           valid_group_ids = inventory_pool.group_ids
           new_partitions.each_pair do |group_id, quantity|
-            group_id = group_id.to_i
+            group_id = group_id
             quantity = quantity.to_i
             if valid_group_ids.include?(group_id) and quantity > 0
               create(group_id: group_id, quantity: quantity)
@@ -346,7 +346,7 @@ class Model < ActiveRecord::Base
     end
 
     unless params[:category_id].blank?
-      if params[:category_id].to_i == -1
+      if params[:category_id] == '-1'
         models = models.where.not(id: Model.joins(:categories))
       else
         models = \

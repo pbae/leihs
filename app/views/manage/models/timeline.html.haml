@@ -11,7 +11,7 @@
         BAND2A
       bandNames_js << _("Available in total: ")
    else
-      group_id = group_id_as_string.to_i
+      group_id = group_id_as_string
       bandInfos_js << <<-BAND2B
         Timeline.createBandInfo( { timeZone:       2,
                                    eventSource:    eventSource[#{group_id}],
@@ -31,7 +31,7 @@
     av.running_reservations.each do |line|
       line.reload # NOTE this is quick fix because we have a running_reservation
       user = line.user
-      group_id = line.allocated_group_id.to_i
+      group_id = line.allocated_group_id
   
       # if line is late then it won't be available until the item is returned 
       end_date = line.late? ? Availability::ETERNITY : (line.end_date.tomorrow.to_time - 1.second)

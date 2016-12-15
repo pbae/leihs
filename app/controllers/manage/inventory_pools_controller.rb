@@ -138,7 +138,7 @@ class Manage::InventoryPoolsController < Manage::ApplicationController
         @holidays_initial \
         + params_holidays.reject { |h| h[:id] }.map { |h| Holiday.new h }
       @holidays.select(&:id).each do |holiday|
-        if added_holiday = params_holidays.detect { |h| h[:id].to_i == holiday.id }
+        if added_holiday = params_holidays.detect { |h| h[:id] == holiday.id }
           holiday._destroy = 1 if added_holiday.key? '_destroy'
         end
       end
