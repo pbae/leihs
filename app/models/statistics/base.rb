@@ -47,7 +47,7 @@ module Statistics
                 object: klass.name,
                 id: x.id,
                 label: x.label,
-                quantity: x.quantity.to_i,
+                quantity: Integer(x.quantity),
                 unit: _('lends') }
           unless klasses.empty?
             h[:children] = \
@@ -79,7 +79,7 @@ module Statistics
                 object: klass.name,
                 id: x.id,
                 label: x.label,
-                quantity: x.quantity.to_i,
+                quantity: Integer(x.quantity),
                 unit: _('contracts') }
           unless klasses.empty?
             h[:children] = \
@@ -111,7 +111,7 @@ module Statistics
                 object: klass.name,
                 id: x.id,
                 label: "#{x.quantity}x #{x.label}",
-                quantity: x.price.to_i,
+                quantity: Integer(x.price),
                 unit: _('CHF') }
           unless klasses.empty?
             h[:children] = \

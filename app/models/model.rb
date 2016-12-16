@@ -55,7 +55,7 @@ class Model < ActiveRecord::Base
           valid_group_ids = inventory_pool.group_ids
           new_partitions.each_pair do |group_id, quantity|
             group_id = group_id
-            quantity = quantity.to_i
+            quantity = Integer(quantity.presence || 0)
             if valid_group_ids.include?(group_id) and quantity > 0
               create(group_id: group_id, quantity: quantity)
             end
@@ -382,7 +382,7 @@ class Model < ActiveRecord::Base
   end
 
   def image(offset = 0)
-    images.offset(offset.to_i).first
+    images.offset(Integer(offset.presence || 0)).first
   end
 
   def needs_permission

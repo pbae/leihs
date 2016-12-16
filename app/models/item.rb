@@ -449,7 +449,7 @@ class Item < ActiveRecord::Base
       h[num] = if with_allocated_codes
                  (h[num].nil? ? code : Array(h[num]) << code)
                else
-                 h[num].to_i + 1
+                 Integer(h[num].presence || 0) + 1
                end
     end
     h
@@ -469,13 +469,13 @@ class Item < ActiveRecord::Base
     default_params = { from: 1, to: infinity, min_gap: 1 }
     params.reverse_merge!(default_params)
 
-    from = [params[:from].to_i, 1].max
+    from = [Integer(params[:from].presence || 0), 1].max
     if params[:to] == infinity
       to = infinity
     else
-      to = [[params[:to].to_i, from].max, infinity].min
+      to = [[Integer(params[:to].presence || 0), from].max, infinity].min
     end
-    min_gap = [[params[:min_gap].to_i, 1].max, to].min
+    min_gap = [[Integer(params[:min_gap].presence || 0), 1].max, to].min
 
     ranges = []
     last_n = from - 1

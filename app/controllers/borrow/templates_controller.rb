@@ -8,7 +8,7 @@ class Borrow::TemplatesController < Borrow::ApplicationController
     reservations = params[:reservations].map do |line|
       {
         model: Model.find_by_id(line['model_id']),
-        quantity: line['quantity'].to_i,
+        quantity: Integer(line['quantity']),
         start_date: Date.parse(line['start_date']),
         end_date: Date.parse(line['end_date']),
         inventory_pool: InventoryPool.find_by_id(line['inventory_pool_id'])
@@ -52,9 +52,9 @@ class Borrow::TemplatesController < Borrow::ApplicationController
     model_links = @template.model_links
     @models = @template.models
     @reservations = \
-      params[:reservations].delete_if { |l| l['quantity'].to_i == 0 }.map do |line|
+      params[:reservations].delete_if { |l| Integer(l['quantity'].presence || 0) == 0 }.map do |line|
         model = @models.detect { |m| m.id == line['model_id'] }
-        quantity = line['quantity'].to_i
+        quantity = Integer(line['quantity'])
         {
           model_link_id: \
             model_links.detect { |link| link.model_id == model.id }.id,
@@ -71,10 +71,10 @@ class Borrow::TemplatesController < Borrow::ApplicationController
     @models = @template.models
     @reservations = \
       params[:reservations]
-        .delete_if { |l| l['quantity'].to_i == 0 }
+        .delete_if { |l| Integer(l['quantity'].presence || 0) == 0 }
         .map do |line|
           model = @models.detect { |m| m.id == line['model_id'] }
-          quantity = line['quantity'].to_i
+          quantity = Integer(line['quantity'])
           start_date = if line['start_date']
                          Date.parse(line['start_date'])
                        else

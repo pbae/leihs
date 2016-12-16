@@ -275,8 +275,8 @@ class ReservationsBundle < ActiveRecord::Base
 
   def max_range
     return nil if reservations.blank?
-    line = reservations.max_by { |x| (x.end_date - x.start_date).to_i }
-    (line.end_date - line.start_date).to_i + 1
+    line = reservations.max_by { |x| Integer(x.end_date - x.start_date) }
+    Integer(line.end_date - line.start_date) + 1
   end
 
   ############################################
@@ -318,7 +318,7 @@ class ReservationsBundle < ActiveRecord::Base
               end_date: end_date || next_open_date(time_window_max),
               delegated_user_id: delegated_user_id || self.delegated_user_id }
 
-    new_lines = quantity.to_i.times.map do
+    new_lines = Integer(quantity).times.map do
       line = user.item_lines.create(attrs) do |l|
         if status == :submitted and reservations.first.try :purpose
           l.purpose = reservations.first.purpose
