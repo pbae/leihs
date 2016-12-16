@@ -16,20 +16,23 @@ class Visit < ActiveRecord::Base
   end
 
   self.table_name = 'reservations'
+  self.primary_key = 'visit_id'
+
+  def id
+    visit_id
+  end
 
   default_scope do
     select(<<-SQL)
       date, reservations.inventory_pool_id, reservations.user_id, status,
       SUM(quantity) AS quantity,
-      hex_to_int(
-        SUBSTRING(
-          ENCODE(
-            DIGEST(
-              CONCAT_WS('_', date, reservations.inventory_pool_id, reservations.user_id, status),
-              'sha1'),
-            'hex'),
-          1, 10)
-      ) as id
+      ENCODE(
+        DIGEST(
+          CONCAT_WS('_', date, reservations.inventory_pool_id, reservations.user_id, status),
+          'sha1'
+        ),
+        'hex'
+      ) AS visit_id
     SQL
     .from(<<-SQL)
       (SELECT CASE WHEN status = 'signed' THEN end_date ELSE start_date END AS date,
@@ -133,6 +136,10 @@ class Visit < ActiveRecord::Base
         .project(Arel.star)
         .to_sql
     ActiveRecord::Base.connection.execute(scope_sql).count
+  end
+
+  def visit_as_json
+    as_json(methods: [:reservation_ids, :action]).merge('id' => visit_id)
   end
 
 end
