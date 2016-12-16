@@ -22,17 +22,13 @@ class Visit < ActiveRecord::Base
     visit_id
   end
 
+  VISIT_ID_SQL_EXPR = "ENCODE( DIGEST( CONCAT_WS('_', date, reservations.inventory_pool_id, reservations.user_id, status), 'sha1' ), 'hex' )"
+
   default_scope do
     select(<<-SQL)
       date, reservations.inventory_pool_id, reservations.user_id, status,
       SUM(quantity) AS quantity,
-      ENCODE(
-        DIGEST(
-          CONCAT_WS('_', date, reservations.inventory_pool_id, reservations.user_id, status),
-          'sha1'
-        ),
-        'hex'
-      ) AS visit_id
+      #{VISIT_ID_SQL_EXPR} AS visit_id
     SQL
     .from(<<-SQL)
       (SELECT CASE WHEN status = 'signed' THEN end_date ELSE start_date END AS date,

@@ -118,8 +118,12 @@ class Manage::InventoryPoolsController < Manage::ApplicationController
 
   def latest_reminder
     user = current_inventory_pool.users.find(params[:user_id])
-    visit = current_inventory_pool.visits
-                .having('id = ?', params[:visit_id]).first
+    visit = \
+      current_inventory_pool
+      .visits
+      .having("#{Visit::VISIT_ID_SQL_EXPR} = ?", params[:visit_id])
+      .first
+
     @notifications = \
       user.notifications.where('created_at >= ?', visit.date).limit(10)
   end
